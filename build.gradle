@@ -1,0 +1,36 @@
+buildscript {
+
+    ext {
+        min_sdk         = 17
+        sdk_version     = 24
+        kotlin_version  = "1.0.4-eap-100"
+        build_tools     = "24.0.0"
+        gradle_plugin   = "2.2.0-beta3"
+        support_version = "24.2.0"
+        play_version    = "9.2.0"
+        anko_version    = "0.9"
+        isCI            = System.getenv("TRAVIS").equals("true")
+    }
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradle_plugin"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url 'https://dl.bintray.com/levelmoney/maven' }
+        maven { url 'https://github.com/asarazan/maven-repository/raw/master/' }
+    }
+}
