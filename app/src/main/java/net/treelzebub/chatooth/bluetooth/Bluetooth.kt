@@ -1,6 +1,7 @@
 package net.treelzebub.chatooth.bluetooth
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import net.treelzebub.chatooth.convenience.unbox
@@ -26,4 +27,8 @@ object Bluetooth {
     // startDiscovery is async and returns a bool indicating successful initiation of discovery.
     // initial discovery lasts 12 seconds.
     fun discover() = adapter!!.startDiscovery()
+
+    fun pairWith(device: BluetoothDevice) {
+        
+    }
 }

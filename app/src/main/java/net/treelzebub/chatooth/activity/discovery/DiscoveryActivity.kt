@@ -14,14 +14,24 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
+import butterknife.bindView
 import net.treelzebub.chatooth.R
 import net.treelzebub.chatooth.bluetooth.Bluetooth
+import net.treelzebub.chatooth.convenience.onNextLayout
+import net.treelzebub.chatooth.convenience.str
 import org.jetbrains.anko.find
 
-class DiscoveryActivity : AppCompatActivity() {
+class DiscoveryActivity : AppCompatActivity(), DiscoveryListener {
 
-    private val receiver = DiscoveryReceiver()
-    private val adapter  = DiscoveryAdapter()
+    companion object {
+        const val REQUEST_DISCOVERABLE = 0x615
+    }
+
+    private val remaining by bindView<TextView>(R.id.remaining)
+
+    private val receiver  = DiscoveryReceiver()
+    private val adapter   = DiscoveryAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +51,7 @@ class DiscoveryActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Bluetooth.discover()
+        requestDiscoverable()
     }
 
     override fun onDestroy() {
@@ -55,6 +66,24 @@ class DiscoveryActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDeviceSelect(device: BluetoothDevice) {
+        Bluetooth.pairWith(device)
+    }
+
+    private fun requestDiscoverable() {
+        val i = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        i.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 240)
+        startActivity(i)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (requestCode === REQUEST_DISCOVERABLE) {
+            onNextLayout {
+                remaining.text = R.string.remaining_x_secs.str("$resultCode")
+            }
+        }
     }
 
     private inner class DiscoveryReceiver : BroadcastReceiver() {

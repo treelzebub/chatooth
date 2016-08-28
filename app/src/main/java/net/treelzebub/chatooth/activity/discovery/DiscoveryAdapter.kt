@@ -11,13 +11,13 @@ import net.treelzebub.chatooth.convenience.setText
 /**
  * Created by Tre Murillo on 8/27/16
  */
-class DiscoveryAdapter : RecyclerView.Adapter<DiscoveryHolder>() {
+class DiscoveryAdapter(val listener: DiscoveryListener) : RecyclerView.Adapter<DiscoveryHolder>() {
 
     private val itemLayout = R.layout.item_discovery_device
 
     var devices: List<BluetoothDevice> = listOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DiscoveryHolder(parent.inflate(itemLayout))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DiscoveryHolder(parent.inflate(itemLayout), listener)
 
     override fun onBindViewHolder(holder: DiscoveryHolder, position: Int) = holder.populate(position, devices[position])
 
@@ -46,12 +46,13 @@ class DiscoveryAdapter : RecyclerView.Adapter<DiscoveryHolder>() {
     }
 }
 
-class DiscoveryHolder(v: View) : RecyclerView.ViewHolder(v) {
+class DiscoveryHolder(val v: View, val listener: DiscoveryListener) : RecyclerView.ViewHolder(v) {
 
     fun populate(itemIdx: Int, device: BluetoothDevice) {
         setText(R.id.device_number) { "" + itemIdx + 1 }
         setText(R.id.device_name)   { device.name }
         setText(R.id.status)        { device.bondState.status() }
+        v.setOnClickListener { listener.onDeviceSelect(device) }
     }
 
     private fun Int?.status(): String {
@@ -61,4 +62,8 @@ class DiscoveryHolder(v: View) : RecyclerView.ViewHolder(v) {
             else                         -> "Not Connected"
         }
     }
+}
+
+interface DiscoveryListener {
+    fun onDeviceSelect(device: BluetoothDevice)
 }
