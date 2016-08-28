@@ -1,17 +1,20 @@
 package net.treelzebub.chatooth.bluetooth
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import android.bluetooth.BluetoothServerSocket
+import android.bluetooth.BluetoothSocket
+import net.treelzebub.chatooth.BuildConfig
 import net.treelzebub.chatooth.convenience.unbox
+import java.util.*
 
 /**
  * Created by Tre Murillo on 8/27/16
  */
 object Bluetooth {
 
-    const val REQUEST_ENABLE_BT = 0x37
+    const val CHATOOTH_NAME     = BuildConfig.APPLICATION_ID
+          val CHATOOTH_UUID     = UUID.fromString("ITS-A-TOTALLY-UNIQUE-IDENTIFIER")
+    const val REQUEST_ENABLE_BT = 0x137
 
     private val adapter: BluetoothAdapter? get() = BluetoothAdapter.getDefaultAdapter()
 
@@ -19,16 +22,12 @@ object Bluetooth {
     val isEnabled     = adapter?.isEnabled.unbox()
     val pairedDevices = adapter?.bondedDevices ?: setOf()
 
-    fun requestEnable(a: AppCompatActivity) {
-        val i = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        a.startActivityForResult(i, REQUEST_ENABLE_BT)
-    }
-
     // startDiscovery is async and returns a bool indicating successful initiation of discovery.
     // initial discovery lasts 12 seconds.
-    fun discover() = adapter!!.startDiscovery()
+    fun discover()      = adapter!!.startDiscovery()
+    fun stopDiscovery() = adapter!!.cancelDiscovery()
 
-    fun pairWith(device: BluetoothDevice) {
-        
+    val serverSocket: BluetoothServerSocket get() {
+        return adapter!!.listenUsingRfcommWithServiceRecord(CHATOOTH_NAME, CHATOOTH_UUID)
     }
 }
