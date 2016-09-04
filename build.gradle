@@ -5,7 +5,7 @@ buildscript {
         sdk_version     = 24
         kotlin_version  = "1.0.4-eap-100"
         build_tools     = "24.0.0"
-        gradle_plugin   = "2.2.0-beta3"
+        gradle_plugin   = "2.2.0-rc1"
         support_version = "24.2.0"
         play_version    = "9.2.0"
         anko_version    = "0.9"
