@@ -2,7 +2,6 @@ package net.treelzebub.chatooth.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
-import android.bluetooth.BluetoothSocket
 import net.treelzebub.chatooth.BuildConfig
 import net.treelzebub.chatooth.convenience.unbox
 import java.util.*
